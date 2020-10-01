@@ -1,10 +1,12 @@
 # ewelink-serverless-vercel
 
+#### **This is not an official product from eWelink. No data are storage, you can check the code to make sure about it.**
+
 With this lambda you can control ANY sonoff device directly from eWelink cloud using internet instead of intranet, without need to set up your device in DIY mode or use IFTTT.
 
 You can use this lambda easily making `POST` requests to `https://ewelink-one.vercel.app`.
 
-No data are storage, you can check the code to make sure about it.
+Also, you can found a web client (PWA like) in  `https://ewelink-one.vercel.app`.
 
 ---
 ### Hoppscoth
