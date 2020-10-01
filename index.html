@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Control any Sonoff device easily!">
+  <meta property="og:image" content="/assets/ewelink-banner.png">
+  <title>eWelink</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="app">
+    <div class="container">
+      <div class="eWelink flex flex-column flex-column-end">
+        <img src="/assets/ewelink.png" alt="eWelink">
+      </div>
+
+      <div class="title flex flex-column flex-center">
+        <p>{{title}}</p>
+      </div>
+
+      <div
+        v-if="internalRoute === '/auth'"
+        id="auth"
+        class="page"
+      >
+        <div class="content flex flex-column flex-column-space-around">
+          <span class="form flex flex-column flex-center">
+            <input type="text" v-model="email" name="email" placeholder="your.email@ewelink.com">
+            <input type="password" v-model="password" name="password" placeholder="y0urP455w0rd">
+            <input type="text" v-model="region" name="region" placeholder="us">
+          </span>
+
+          <p class="disclaimer">This is not an official product from eWelink. No data are storage, you can check the code to make sure about it.</p>
+        </div>
+
+        <div class="footer flex flex-row flex-center">
+          <div
+            :class="[ error ? 'button--error' : '' ]"
+            class="button"
+            @click="doStart"
+          >
+            {{button}}
+          </div>
+        </div>
+      </div>
+
+      <div
+        v-if="internalRoute === '/devices'"
+        id="devices"
+        class="page"
+      >
+        <ul class="content devices flex wrap flex-row-start">
+          <li
+            class="device flex flex-column flex-center"
+            v-for="({ name, deviceID }, index) in devices"
+            :key="index"
+            @click="doSelectDevice(name, deviceID)"
+          >
+            <img class="switch" src="/assets/switch-icon.jpg" alt="switch">
+            <h1>{{name}}</h1>
+            <h2>{{deviceID}}</h2>
+          </li>
+          <li class="separator"></li>
+        </ul>
+
+        <div class="footer flex flex-row flex-center">
+          <div
+            class="button"
+            @click="doRefreshDevices"
+          >
+            {{button}}
+          </div>
+        </div>
+      </div>
+
+      <div
+        v-if="internalRoute === '/action'"
+        id="action"
+        class="page"
+      >
+        <div class="content action flex flex-column flex-center">
+          <div class="identification flex flex-column flex-center">
+            <h1>{{device.name}}</h1>
+            <h2>{{device.deviceID}}</h1>
+          </div>
+
+          <div class="channel flex flex-column flex-center">
+              <input type="text" v-model="device.channel" name="channel" placeholder="channel">
+          </div>
+
+          <div class="new-state flex flex-row flex-center">
+            <div
+              class="button--small button--outline button"
+              @click="device.state = 'on'"
+            >
+              ON
+            </div>
+
+            <div
+              class="button--small button--outline button"
+              @click="device.state = 'off'"
+            >
+              OFF
+            </div>
+
+            <div
+              class="button--small button--outline button"
+              @click="device.state = 'toggle'"
+            >
+              TOGGLE
+            </div>
+          </div>
+
+          <pre class="code" data-clipboard-target=".code" data-clipboard-action="copy">{{actionCode}}</pre>
+
+        </div>
+
+        <div class="footer flex flex-row flex-center">
+          <div
+            class="button"
+            @click="internalRoute = '/devices'"
+          >
+            Back
+          </div>
+
+          <div
+            :class="[ error ? 'button--error' : '' ]"
+            class="button"
+            @click="doMakeAction"
+            >
+            {{button}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js" integrity="sha256-KSlsysqp7TXtFo/FHjb1T9b425x3hrvzjMWaJyKbpcI=" crossorigin="anonymous"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/axios@0.20.0/dist/axios.min.js" integrity="sha256-KyY5SqyBmXeM0zfYBGU1tuqcstxpjkECApypY+CA4Z8=" crossorigin="anonymous"></script>
+  <script src="/js/script.js" charset="utf-8"></script>
+</body>
+</html>

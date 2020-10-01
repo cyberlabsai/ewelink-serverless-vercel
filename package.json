@@ -1,0 +1,13 @@
+{
+  "name": "ewelink",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ewelink-api": "^3.0.0"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "builds": [
+    {
+      "src": "**/*.*",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "api/*.js",
+      "use": "@now/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "continue": true,
+      "headers": {
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,OPTIONS,PATCH,DELETE,POST,PUT",
+        "Access-Control-Allow-Headers": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+      }
+    },
+    {
+      "src": "/(.*)",
+      "methods": ["OPTIONS"],
+      "dest": "api/cors.js"
+    },
+    {
+      "src": "/(.*)",
+      "methods": ["GET"],
+      "dest": "public/index.html"
+    },
+    {
+      "src": "/auth",
+      "methods": ["POST"],
+      "dest": "api/auth.js"
+    },
+    {
+      "src": "/devices",
+      "methods": ["POST"],
+      "dest": "api/devices.js"
+    },
+    {
+      "src": "/action",
+      "methods": ["POST"],
+      "dest": "api/action.js"
+    }
+
+  ]
+}
