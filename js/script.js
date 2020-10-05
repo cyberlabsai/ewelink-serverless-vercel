@@ -178,6 +178,7 @@ var app = new Vue({
       this.loading = false
       this.error = false
       this.internalRoute = '/action'
+      window.history.pushState({}, null, '/action')
 
       this.device = {
         name,
