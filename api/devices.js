@@ -50,7 +50,6 @@ module.exports = async (req, res) => {
   return res.send({
     ewelink: {
       status: 'success',
-      accessToken,
       devices: devicesList
     }
   })

@@ -10,6 +10,7 @@ var app = new Vue({
     region: 'us',
     internalRoute: '/auth',
     accessToken: '',
+    apiKey: '',
     devices: [],
     device: {},
     actionCode: ''
@@ -134,6 +135,7 @@ var app = new Vue({
       }
 
       this.accessToken = response.accessToken
+      this.apiKey = response.apiKey
       return true
     },
     async doGetMyDevices () {
@@ -178,12 +180,12 @@ var app = new Vue({
       this.loading = false
       this.error = false
       this.internalRoute = '/action'
-      window.history.pushState({}, null, '/action')
 
       this.device = {
         name,
         deviceID,
         accessToken: this.accessToken,
+        apiKey: this.apiKey,
         channel: '',
         state: ''
       }
@@ -230,6 +232,8 @@ var app = new Vue({
   watch: {
     internalRoute: {
       handler (route) {
+        window.history.pushState({}, null, route)
+
         switch (route) {
         case '/auth':
           this.title = 'Please insert your email, password and region to start'
