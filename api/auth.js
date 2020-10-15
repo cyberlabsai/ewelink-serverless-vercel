@@ -38,11 +38,12 @@ module.exports = async (req, res) => {
 
   /*
    *  Try get credencials from eWelink API
-   *  The response contain a lot information about the user, but in this case we only want the 'at' (Access Token) to make futurue requests
+   *  The response contain a lot information about the user, but in this case we only want the 'at' (Access Token) and 'user.apikey' to make futurue requests
    */
   const login = await connection.getCredentials()
 
   const accessToken = login.at
+  const apikey = login.user.apikey || undefined
 
   if (!accessToken) {
     return res.send({
@@ -57,7 +58,8 @@ module.exports = async (req, res) => {
   return res.send({
     ewelink: {
       status: 'success',
-      accessToken
+      accessToken,
+      apiKey: apikey
     }
   })
 }

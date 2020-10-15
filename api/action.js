@@ -14,6 +14,7 @@ module.exports = async (req, res) => {
   const deviceID = req.body.ewelink.deviceID
   const channel = req.body.ewelink.channel || ''
   const state = req.body.ewelink.state || 'toggle'
+  const apiKey = req.body.ewelink.apiKey || undefined
 
   if (!accessToken ||
       !deviceID) {
@@ -32,24 +33,74 @@ module.exports = async (req, res) => {
    *  @type {ewelink}
    */
   const connection = new ewelink({
+    apiKey,
     at: accessToken,
     region
   })
 
   /*
-   *  If the connection is successful, get 'deviceID', 'state' and 'channel' from user's 'body' payload and set the new state to the selected device
+   *  If user not pass an apiKey and connection is successful, get 'deviceID', 'state' and 'channel' from user's 'body' payload and set the new state to the selected device
    *  @param  {String}  deviceID - required
    *  @param  {String}  state - optional from user, the default from this function is 'toggle'
    *  @param  {String}  channel - optional from user, default from this function is '' (blank)
    */
-  const status = await connection.setDevicePowerState(deviceID, state, channel)
+  if (!apiKey) {
+    const response = await connection.setDevicePowerState(deviceID, state, channel)
 
-  /*  Send the response to the user including the Access Token and the region of there account  */
-  return res.send({
-    ewelink: {
-      status: 'success',
-      deviceID,
-      ...status
-    }
-  })
+    /*  Send the response to the user  */
+    return res.send({
+      ewelink: {
+        deviceID,
+        ...response
+      }
+    })
+  }
+
+  /*
+   *  login into eWeLink to get all necessary credentials to connect using WebSocket
+   */
+  await connection.getCredentials()
+
+  try {
+    /*
+     *  open WebSocket
+     */
+    const socket = await connection.openWebSocket(async data => {
+      /*
+       *  data is the response from eWeLink WebSocket Cloud
+       */
+      if (data.error) {
+        return res.send({
+          ewelink: {
+            deviceID,
+            error: 'Unable to open connection with eWeLink, verify your credentials and try again'
+          }
+        })
+      }
+
+      /*
+       *  If the connection is successful, get 'deviceID', 'state' and 'channel' from user's 'body' payload and set the new state to the selected device
+       *  @param  {String}  deviceID - required
+       *  @param  {String}  state - optional from user, the default from this function is 'toggle'
+       *  @param  {String}  channel - optional from user, default from this function is '' (blank)
+       */
+      const status = await connection.setWSDevicePowerState(deviceID, state, { channel })
+
+      /*  Send the response to the user  */
+      return res.send({
+        ewelink: {
+          deviceID,
+          ...status
+        }
+      })
+    })
+  } catch (err) {
+    return res.send({
+      ewelink: {
+        deviceID,
+        ...err
+      }
+    })
+  }
+
 }

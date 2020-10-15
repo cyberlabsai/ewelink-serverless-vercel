@@ -34,11 +34,12 @@ You need to pass your eWelink `email` and `password`. You can also pass your `re
 ```
 
 ##### Response
-You will receive an `accessToken`, save it to make future requests.
+You will receive an `accessToken` and `apiKey`, save it to make future requests.
 ```
 {
   "ewelink": {
-    "accessToken": "XXXxXXXxXXXxXXXXxXXXXxXXXXxXXXXxXXXxXXX"
+    "accessToken": "XXXxXXXxXXXxXXXXxXXXXxXXXXxXXXXxXXXxXXX",
+    "apiKey": "xxXXxxXX-xxXX-xxXX-xxXX-xxXXxxXXxxXX",
   }
 }
 ```
@@ -63,7 +64,6 @@ You will receive an Array with the `name` and the `deviceID`, take the `deviceID
 ```
 {
   "ewelink": {
-    "accessToken": "XXXxXXXxXXXxXXXXxXXXXxXXXXxXXXXxXXXxXXX",
     "devices": [
       {
         "name": "Tomada Rack",
@@ -92,11 +92,12 @@ You will receive an Array with the `name` and the `deviceID`, take the `deviceID
 https://ewelink-one.vercel.app/action
 ```
 ##### Request
-Pass the `accessToken` and the `deviceID` to `toggle` the power state of your device. You can pass `channel` and `state` (`on`, `off` or `toggle`) if you preffer to better control your request but it's optional. You can also pass your `region` if your account is not `us` based.
+Pass the `accessToken`, `apiKey` and the `deviceID` to `toggle` the power state of your device. You can pass `channel` and `state` (`on`, `off` or `toggle`) if you preffer to better control your request but it's optional. You can also pass your `region` if your account is not `us` based.
 ```
 {
   "ewelink": {
     "accessToken": "XXXxXXXxXXXxXXXXxXXXXxXXXXxXXXXxXXXxXXX",
+    "apiKey": "xxXXxxXX-xxXX-xxXX-xxXX-xxXXxxXXxxXX",
     "deviceID": "0000xxxxxx"
   }
 }
@@ -110,7 +111,7 @@ If everything works correctly, you will receive an Object with the response `sta
     "deviceID": "0000xxxxxx",
     "status": "ok",
     "state": "toggle",
-    "channel": ""
+    "channel": "X"
   }
 }
 ```

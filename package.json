@@ -8,6 +8,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ewelink-api": "^3.0.0"
+    "ewelink-api": ">3.0.0"
   }
 }
